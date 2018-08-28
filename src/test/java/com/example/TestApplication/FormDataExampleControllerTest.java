@@ -5,17 +5,22 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.WebMvcTest;
+import org.springframework.http.MediaType;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.RequestBuilder;
+import org.springframework.test.web.servlet.request.MockHttpServletRequestBuilder;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
+import java.util.Random;
+
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.content;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 @RunWith(SpringRunner.class)
-@WebMvcTest(MathController.class)
-public class MathControllerTest {
+@WebMvcTest(FormDataExampleController.class)
+public class FormDataExampleControllerTest {
 
     @Autowired
     MockMvc mvc;
@@ -49,7 +54,7 @@ public class MathControllerTest {
     @Test
     public void testSum() throws Exception {
 
-        RequestBuilder request = MockMvcRequestBuilders.post("/math/sum?n=4&n=5&n=6");
+        RequestBuilder request = post("/math/sum?n=4&n=5&n=6");
 
         this.mvc.perform(request)
                 .andExpect(status().isOk())
@@ -59,7 +64,7 @@ public class MathControllerTest {
     @Test
     public void testSum_Return404_GivenBadRequest() throws Exception {
 
-        RequestBuilder request = MockMvcRequestBuilders.post("/math/su");
+        RequestBuilder request = post("/math/su");
 
         this.mvc.perform(request)
                 .andExpect(status().isNotFound());
@@ -68,7 +73,7 @@ public class MathControllerTest {
     @Test
     public void testSum_Return400_WhenBadRequest() throws Exception {
 
-        RequestBuilder request = MockMvcRequestBuilders.post("/math/sum");
+        RequestBuilder request = post("/math/sum");
 
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest());
@@ -94,5 +99,19 @@ public class MathControllerTest {
         this.mvc.perform(request)
                 .andExpect(status().isBadRequest());
 
+    }
+
+    @Test
+    public void testCreateComment() throws Exception {
+        String content = String.valueOf(new Random().nextInt());
+
+        MockHttpServletRequestBuilder request1 = post("/comments")
+                .contentType(MediaType.APPLICATION_FORM_URLENCODED)
+                .param("content", content)
+                .param("author", "Dwayne");
+
+        this.mvc.perform(request1)
+                .andExpect(status().isOk())
+                .andExpect(content().string(String.format("Dwayne said %s!", content)));
     }
 }

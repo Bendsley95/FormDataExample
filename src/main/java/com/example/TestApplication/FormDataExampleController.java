@@ -3,19 +3,16 @@ package com.example.TestApplication;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.Collections;
 import java.util.List;
-
-import static java.util.Collections.emptyList;
 
 @RestController
 @RequestMapping("/math")
-public class MathController {
+public class FormDataExampleController {
 
-    private MathService mathService;
+    private FormDataExampleService mathService;
 
     @Autowired
-    public MathController(MathService mathService) {
+    public FormDataExampleController(FormDataExampleService mathService) {
         this.mathService = mathService;
     }
 

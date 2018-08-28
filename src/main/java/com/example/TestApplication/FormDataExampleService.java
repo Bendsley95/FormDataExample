@@ -11,7 +11,7 @@ import java.util.List;
 
 
 @Service
-public class MathService {
+public class FormDataExampleService {
 
     public String calculate(@RequestParam(value = "operation") String operation, @RequestParam(value = "x") int x, @RequestParam(value = "y") int y) {
 
